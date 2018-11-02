@@ -11,8 +11,8 @@
 
 
 #define MAXROW 13
-#define MAXCOL 9
-#define numofbombs 10
+#define MAXCOL 13
+#define numofbombs 15
 
 
 using namespace std;
