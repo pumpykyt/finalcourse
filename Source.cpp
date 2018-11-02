@@ -19,47 +19,39 @@ void SetColor(int text, int background) {
 	SetConsoleTextAttribute(hStdOut, background * 16 + text);
 }
 
-char *Rus(char *s2) {
-	AnsiToOem(s2, s1);
-	return s1;
-}
 
-void gamefunc()
+void coutAUTHOR()
 {
-	system("cls");
-	GotoXY(50, 20);
-	cout << "Почаи гру=)\n";
-
+	SetColor(15, 0);
+	cout << "  ___            _                        __           _           _    " << endl;
+	cout << " / _ )          | |                      /__\_    _ ___| |__  _   _| | __" << endl;
+	cout << "/ /_\ )_ __   __| |_ __ _____      __    / )// | | |_  / '_ )| | | | |/ /" << endl;
+	cout << "|  _  | '_ ) / _` | '__/ _ ) \ /) / /   / _  ) |_| |/ /| | | | |_| |   < " << endl;
+	cout << "| | | | | | | (_| | | |  __/) V  V /   |/ |_/|__, /___|_| |_||__,_|_|)_)" << endl;
+	cout << ")_| |_/_| |_|)__,_|_|  \___| )_/)_/           |___/                      " << endl;
+	cout << endl;
 }
+
 
 
 
 void intro() {
-	cout << "\t\t\tПривiт. Бажаю вдачi.\n\t\t\tcreator: Andrew Ryzhuk\n\n*Правила:  1. Рядок маэ бути без нуля-" << MAXROW - 1 << " та колонка 0-" << MAXCOL - 1 << ".\n\t2. \'|*|\' Означаэ закриту клiтинку, \'(b)\' означаэ бомбу, \'-\' пусте поле." << endl;
+	
 	
 	const char c[2][256] = { " /)_/)\n (^_^)\n(\\__ /)\n", "(\\__/)\n(='.'=)\n(\")_(\")\n" };
 	int state = 0;
 	do
 	{
+		system("cls");
+		system("color 0f");
+		coutAUTHOR();
 		
-
-		for (int i = 0; i < 20; i++)
-		{
-			system("cls");
-			
-			
-			cout  << "  ___            _                   " << endl;
-			cout <<  " / _ )          | |                  " << endl;
-			cout <<  "/ /_\ )_ __   __| |_ __ _____      __" << endl;
-			cout <<  "|  _  | '_ ) / _` | '__/ _ ) \ /) / /" << endl;
-			cout <<  "| | | | | | | (_| | | |  __/) V  V / " << endl;
-			cout <<  ")_| |_/_| |_|)__,_|_|  \___| )_/)_/  " << endl;
-			cout << endl;
-		}
-	
+		unsigned short start = 0;
 			cout << "Project made by Andrij Ryzhuk\n\n" << c[state ^= 1];
+			cout << endl << endl;
+			cout << "\t\t\tПривiт. Бажаю вдачi.\n\t\t\tcreator: Andrew Ryzhuk\n\n*Правила:  1. Рядок та колонка маэ бути без нуля .\n\t2." << " \'#\' Означаэ закриту клiтинку, \'(b)\' означаэ бомбу, \'-\' пусте поле." << endl;
 			cout << "Натиснiть любу кнопку щоб розпочати...";
-		
+			getchar();
 
 	} while (_getch());
 	
@@ -106,7 +98,8 @@ int openedboxnum() {
 	int i, j, sum = 0;
 	for (i = 1; i < MAXROW - 1; i++) {
 		for (j = 1; j < MAXCOL - 1; j++) {
-			if (manage_mine[i][j] == true) sum++;
+			if (manage_mine[i][j] == true) 
+				sum++;
 		}
 	}
 	return sum;
@@ -129,10 +122,13 @@ bool test_input(int rowno, int colno) {
 
 
 void show_mine() {
+	
+	
+	system("color f0");
 	int i, j;
 
 	for (int x = 1; x < MAXCOL-1; x++)
-		cout << "    " << x;
+		cout << setw(5) << x;
 	cout << endl;
 	
 	for (i = 1; i < MAXROW - 1; i++) {
@@ -154,7 +150,7 @@ void show_mine() {
 
 			default:
 				
-				cout << " |*| ";
+				cout << "  #  ";
 			}
 		}
 		cout << "\n" << endl;
@@ -203,6 +199,8 @@ void saper()
 
 	//proces sapera
 	while (openedboxnum() != closednum && minearr[therownum][thecolnum] != -1) {
+
+		system("cls");
 		show_mine();
 	PORT:
 		//Vvodimo koordinaty booma
@@ -247,13 +245,13 @@ void saper()
 void menu() {
 	setlocale(LC_ALL, "rus");
 
-	SetColor(4,0);
+	SetColor(5,0);
 	cout << setw(10);
 	cout << " .oooooo..o                                        " << endl;
 	cout << "d8P'    `Y8                                        " << endl;
 	cout << "Y88bo.       .oooo.   oo.ooooo.   .ooooo.  oooo d8b" << endl;
 	cout << " `xY8888o.  `P  )88b   888' `88b d88' `88b `888xx8P" << endl;
-	cout << "     `xY88b.oPx888   888   888 888ooo888  888    " << endl;
+	cout << "     `xY88b.  oPx888   888   888 888ooo888  888    " << endl;
 	cout << "oo     .d8P d8(  888   888   888 888    .o  888    " << endl;
 	cout << "8xx88888Pi  iY888xx8o  888bod8P' iY8bod8Pi d888b   " << endl;
 	cout << "                       888                         " << endl;
@@ -318,7 +316,7 @@ void menu() {
 			else {
 				GotoXY(27, 12);
 				SetColor(15, 0);
-				cout << "   Новая гра   ";
+				cout << "   Нова гра   ";
 				GotoXY(30, 13); 
 				SetColor(14, 0); 
 				cout << "-->Вийти<--";
