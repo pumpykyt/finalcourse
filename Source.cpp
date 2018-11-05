@@ -3,9 +3,9 @@
 
 
 
-//Prototypu usih funkciy
 
-/* ALL THE FUNCTIONS */
+
+//vsi funcs
 HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 char s1[256];
 
@@ -32,8 +32,52 @@ void coutAUTHOR()
 	cout << endl;
 }
 
+void coutPS() {
+	SetColor(rand() % 15, 0);
+	cout << setw(10);
+	cout << "\n\n\n\n\n\n";
+	cout << " .oooooo..o                                        " << endl;
+	cout << "d8P'    `Y8                                        " << endl;
+	cout << "Y88bo.       .oooo.   oo.ooooo.   .ooooo.  oooo d8b" << endl;
+	cout << " `xY8888o.  `P  )88b   888' `88b d88' `88b `888xx8P" << endl;
+	cout << "     `xY88b.  oPx888   888   888 888ooo888  888    " << endl;
+	cout << "oo     .d8P d8(  888   888   888 888    .o  888    " << endl;
+	cout << "8xx88888Pi  iY888xx8o  888bod8P' iY8bod8Pi d888b   " << endl;
+	cout << "                       888                         " << endl;
+	cout << "                      o888o                        " << endl;
 
 
+	//Vivodimo dekorativnu minu
+	char r = '*';
+	char p = ' ';
+	int n = 7;
+	int z = 1;
+
+	for (int i = 0; i < n / 2 + 1; i++)
+	{
+		int prob = (n - z) / 2;
+		for (int j = 0; j < prob; j++)
+			cout << p;
+		for (int k = 0; k < z; k++)
+			cout << r;
+		cout << endl;
+
+
+		z = z + 2;
+	}
+	z = n - 2;
+
+	for (int i = n / 2; i > 0; i--)
+	{
+		int prob = (n - z) / 2;
+		for (int j = 0; j < prob; j++)
+			cout << p;
+		for (int k = 0; k < z; k++)
+			cout << r;
+		cout << endl;
+		z = z - 2;
+	}
+}
 
 void intro() {
 	
@@ -160,8 +204,11 @@ void show_mine() {
 void game_over() {
 	int i, j;
 	for (i = 1; i < MAXROW - 1; i++) {
+		Sleep(150);
 		for (j = 1; j < MAXCOL - 1; j++) {
-			
+			SetColor(rand() % 14 + 1, 15);
+			Sleep(15);
+			SetColor(rand() % 14 + 1, 15);
 			switch (minearr[i][j]) {
 			case 0: cout << "  -  "; break;
 			case -1: cout << " (b) "; break;
@@ -170,6 +217,7 @@ void game_over() {
 		}
 		cout << "\n" << endl;
 	}
+	system("color 07");
 }
 
 void saper()
@@ -198,6 +246,8 @@ void saper()
 	}
 
 	//proces sapera
+
+	clock_t t = clock(); //stvoryv zminu dly taymera chasu sapera
 	while (openedboxnum() != closednum && minearr[therownum][thecolnum] != -1) {
 
 		system("cls");
@@ -223,21 +273,64 @@ void saper()
 			manage_mine[therownum][thecolnum] = true;
 		cout << "\n" << endl;
 	}
+	
 
+	if (minearr[therownum][thecolnum] == -1)
+	{
+		
+	}
+
+	int time = (clock() - t) / CLOCKS_PER_SEC; //zmina v yau zapusani ms yai perevedeni v secundi
+	int time_min = 0;
+	int time_sec = 0; //chas v secundah pisly perevodu v min+sec
+
+
+	if (time > 59)
+	{
+		time_min = time / 60 + (time % 60);
+		time_sec = time % 60;
+	}
+	else
+		time_sec = time;
+
+
+
+	system("cls");
 	game_over();
-	cout << " #####     #    #     # #######     ####### #     # ####### ######\n";
-	cout << "#     #   # #   ##   ## #           #     # #     # #       #     #\n";
-	cout << "#        #   #  # # # # #           #     # #     # #       #     #\n";
-	cout << "#  #### #     # #  #  # #####       #     # #     # #####   ######\n";
-	cout << "#     # ####### #     # #           #     #  #   #  #       #   #\n";
-	cout << "#     # #     # #     # #           #     #   # #   #       #    #\n";
-	cout << " #####  #     # #     # #######     #######    #    ####### #     #\n";
+	
+		
+	for (int i = 0; i < 20; i++) {
+
+		system("cls");
+		SetColor(rand() % 14 + 1, 0);
+		cout << " #####     #    #     # #######     ####### #     # ####### ######\n";
+		cout << "#     #   # #   ##   ## #           #     # #     # #       #     #\n";
+		cout << "#        #   #  # # # # #           #     # #     # #       #     #\n";
+		cout << "#  #### #     # #  #  # #####       #     # #     # #####   ######\n";
+		cout << "#     # ####### #     # #           #     #  #   #  #       #   #\n";
+		cout << "#     # #     # #     # #           #     #   # #   #       #    #\n";
+		cout << " #####  #     # #     # #######     #######    #    ####### #     #\n";
+		Sleep(100);
+		
+
+	}
+	
+
+
+	
+	if (time_min != 0)
+		cout << endl << "Час гри становив: " << time_min << "хвилин " << time_sec << "сек " << endl; // vidodim secundi
+	else
+		cout << endl << "Час гри становив: " << time_sec << "сек " << endl;
+
+
+
 	if (minearr[therownum][thecolnum] == -1)
 		cout << " Ви попали на бомбу! " << endl;
-
-
 	else
-		cout << "В1таю... \tГра завершена" << endl;
+		cout << "Вiтаю... \tГра завершена" << endl;
+
+
 
 	system("pause");
 }
@@ -245,51 +338,9 @@ void saper()
 void menu() {
 	setlocale(LC_ALL, "rus");
 
-	SetColor(5,0);
-	cout << setw(10);
-	cout << " .oooooo..o                                        " << endl;
-	cout << "d8P'    `Y8                                        " << endl;
-	cout << "Y88bo.       .oooo.   oo.ooooo.   .ooooo.  oooo d8b" << endl;
-	cout << " `xY8888o.  `P  )88b   888' `88b d88' `88b `888xx8P" << endl;
-	cout << "     `xY88b.  oPx888   888   888 888ooo888  888    " << endl;
-	cout << "oo     .d8P d8(  888   888   888 888    .o  888    " << endl;
-	cout << "8xx88888Pi  iY888xx8o  888bod8P' iY8bod8Pi d888b   " << endl;
-	cout << "                       888                         " << endl;
-	cout << "                      o888o                        " << endl;
-
-
-	//Vivodimo dekorativnu minu
-	char r = '*';
-	char p = ' ';
-	int n = 7;
-	int z = 1;
 	
-	for (int i = 0; i < n / 2 + 1; i++)
-	{
-		int prob = (n - z) / 2;
-		for (int j = 0; j < prob; j++)
-			cout << p;
-		for (int k = 0; k < z; k++)
-			cout << r;
-		cout << endl;
 
-
-		z = z + 2;
-	}
-	z = n - 2;
 	
-	for (int i = n / 2; i > 0; i--)
-	{
-		int prob = (n - z) / 2;
-		for (int j = 0; j < prob; j++)
-			cout << p;
-		for (int k = 0; k < z; k++)
-			cout << r;
-		cout << endl;
-		z = z - 2;
-	}
-
-
 	int f = 1, k, code;
 	SetColor(0, 0);
 	GotoXY(27, 12);
@@ -298,11 +349,14 @@ void menu() {
 	GotoXY(30, 13);
 	SetColor(15, 0);
 	cout << "   Вийти   ";
+	
+	
 	do {
 		k = 0;
 		code = _getch();
 		if (code == 224 || code == 0)
 			code = _getch();
+		coutPS();
 		if (code == 80) {
 			f = f * (-1);
 			if (f == 1) {
@@ -341,7 +395,9 @@ void menu() {
 				cout << "-->Вийти<--";
 			}
 		}
-		else if (code == 13) k = 1;
+		else if (code == 13)
+			k = 1;
+		
 	} while (k == 0);
 	if (f != 1) exit(0);
 	
@@ -350,7 +406,17 @@ void menu() {
 }
 
 void main() {
+
+	//robimo comfortniy rozmir cmd
+	HWND hwnd;
+	char Title[1024];
+	GetConsoleTitle(Title, 1024); 
+	hwnd = FindWindow(NULL, Title); 
+	MoveWindow(hwnd, 26, 11, 700, 600, TRUE);
+	_getch();
+
 	
+
 	menu();
 	
 }
