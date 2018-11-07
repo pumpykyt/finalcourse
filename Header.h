@@ -1,8 +1,9 @@
 #pragma once
-#include<iostream>
-#include<conio.h>
-#include<cstdlib>
-#include<ctime>
+
+#include <iostream>
+#include <conio.h>
+#include <cstdlib>
+#include <ctime>
 #include <conio.h>
 #include <Windows.h>
 #include <iomanip>
@@ -10,9 +11,9 @@
 
 
 
-#define MAXROW 13
-#define MAXCOL 13
-#define numofbombs 15
+const int MAXROW = 20;
+const int MAXCOL = 15;
+const int numofbombs = 25;
 
 
 using namespace std;
@@ -30,3 +31,4 @@ void show_mine();
 void game_over();
 bool test_input(int rowno, int colno);
 void menu();
+void gotoxyGAME(int x, int y);
