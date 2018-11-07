@@ -1,13 +1,9 @@
-п»ї#include "Header.h"
-
-
-
-
-
+#include "Header.h"
 
 //vsi funcs
 HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 char s1[256];
+
 
 
 void GotoXY(short X, short Y) {
@@ -80,25 +76,29 @@ void coutPS() {
 }
 
 void intro() {
-	
-	
+
+
 	const char c[2][256] = { " /)_/)\n (^_^)\n(\\__ /)\n", "(\\__/)\n(='.'=)\n(\")_(\")\n" };
 	int state = 0;
 	do
 	{
 		system("cls");
 		system("color 0f");
-		coutAUTHOR();
-		
+
+
 		unsigned short start = 0;
-			cout << "Project made by Andrij Ryzhuk\n\n" << c[state ^= 1];
-			cout << endl << endl;
-			cout << "\t\t\tРџСЂРёРІiС‚. Р‘Р°Р¶Р°СЋ РІРґР°С‡i.\n\t\t\tcreator: Andrew Ryzhuk\n\n*РџСЂР°РІРёР»Р°:  1. Р СЏРґРѕРє С‚Р° РєРѕР»РѕРЅРєР° РјР°СЌ Р±СѓС‚Рё Р±РµР· РЅСѓР»СЏ .\n\t2." << " \'#\' РћР·РЅР°С‡Р°СЌ Р·Р°РєСЂРёС‚Сѓ РєР»iС‚РёРЅРєСѓ, \'(b)\' РѕР·РЅР°С‡Р°СЌ Р±РѕРјР±Сѓ, \'-\' РїСѓСЃС‚Рµ РїРѕР»Рµ." << endl;
-			cout << "РќР°С‚РёСЃРЅiС‚СЊ Р»СЋР±Сѓ РєРЅРѕРїРєСѓ С‰РѕР± СЂРѕР·РїРѕС‡Р°С‚Рё...";
-			getchar();
+		cout << "Project made by Andrij Ryzhuk\n\n" << c[state ^= 1];
+		cout << endl << endl;
+		cout << "\t\t\tПривiт. Бажаю удачi.\n\t\t\tcreator: Andrew Ryzhuk\n\n*Правила:  1. Рядок та колонка маэ бути без нуля .\n\t2." << " \'#\' Означаэ закриту клiтинку, \'(b)\' означаэ бомбу, \'-\' пусте поле." << endl;
+		coutAUTHOR();
+		cout << "Натиснiть любу кнопку щоб розпочати...";
+		getchar();
 
 	} while (_getch());
+
+	cout << endl;
 	
+
 	cout << "\n\n";
 }
 
@@ -142,7 +142,7 @@ int openedboxnum() {
 	int i, j, sum = 0;
 	for (i = 1; i < MAXROW - 1; i++) {
 		for (j = 1; j < MAXCOL - 1; j++) {
-			if (manage_mine[i][j] == true) 
+			if (manage_mine[i][j] == true)
 				sum++;
 		}
 	}
@@ -159,45 +159,46 @@ bool test_input(int rowno, int colno) {
 		if (colno == i)
 			flag2++;
 	}
-	if (flag1 == 0 || flag2 == 0) 
+	if (flag1 == 0 || flag2 == 0)
 		return false;
 	return true;
 }
 
 
 void show_mine() {
-	
-	
+
+
 	system("color f0");
 	int i, j;
 
-	for (int x = 1; x < MAXCOL-1; x++)
-		cout << setw(5) << x;
-	cout << endl;
-	
-	for (i = 1; i < MAXROW - 1; i++) {
-		cout << i;
+	//cout << " ";
+	//for (int x = 1; x < MAXCOL-1; x++)
+	//	cout << " " << x;
+	//cout << endl;
 
-		
+	for (i = 1; i < MAXROW - 1; i++) {
+		//cout << i; 
+
+
 		for (j = 1; j < MAXCOL - 1; j++) {
-			
+
 
 			switch (manage_mine[i][j]) {
 			case true:
 				switch (minearr[i][j]) {
-				case 0: cout << "  -  ";
+				case 0: cout << "-";
 					break;
-				default: 
-					cout << "  " << minearr[i][j] << "  ";
+				default:
+					cout << minearr[i][j];
 				}
 				break;
 
 			default:
-				
-				cout << "  #  ";
+
+				cout << "#";
 			}
 		}
-		cout << "\n" << endl;
+		cout << endl;
 	}
 }
 
@@ -217,15 +218,23 @@ void game_over() {
 		}
 		cout << "\n" << endl;
 	}
-	system("color 07");
+
+}
+
+void gotoxyGAME(int x, int y)
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
 void saper()
 {
 	setlocale(LC_ALL, "rus");
 	srand(time(0));
-	int i = 0, j, tempr, tempc, thecolnum = 0;
-	int therownum = 0;
+	int i = 0, tempr, tempc, thecolnum = 1;
+	int therownum = 1;
 	int closednum;
 
 
@@ -252,32 +261,88 @@ void saper()
 
 		system("cls");
 		show_mine();
-	PORT:
-		//Vvodimo koordinaty booma
-		cout << "Р СЏРґРѕРє: ";
-		cin >> therownum;
-		cout << "РљРѕР»РѕРЅРєР°: ";
-		cin >> thecolnum;
 
-		//Provirka na pravelnist vvedenih koordinat
-		if (test_input(therownum, thecolnum) == false) {
-			cout << "\n*РЈРІР°Р¶РЅРѕ РїСЂРѕС‡РёС‚Р°Р№С‚Рµ iРЅС„РѕСЂРјР°С†iСЋ*\n\n";
-			goto PORT;
-		}
 
-		//Provirka susidnih klitinok na pustotu
-		//yakscho = 0 - vidrivaem puste pole
+		char c;
+		int x = 0;
+		int y = 0;
+
+		gotoxyGAME(0, 0);
+		do {
+
+
+
+			c = _getch();
+			switch (c) {
+			case 75:
+
+				gotoxyGAME(x -= 1, y);
+
+
+				break;
+			case 77:
+
+				gotoxyGAME(x += 1, y);
+
+				break;
+			case 72:
+
+				gotoxyGAME(x, y -= 1);
+
+				break;
+			case 80:
+
+				gotoxyGAME(x, y += 1);
+
+				break;
+			}
+
+		} while (c != 83);
+
+
+		thecolnum = x + 1;
+		therownum = y + 1;
+
+
+
+
+		/*PORT:
+			//Vvodimo koordinaty booma
+			cout << "Рядок: ";
+			cin >> therownum;
+			cout << "Колонка: ";
+			cin >> thecolnum; */
+
+
+
+
+
+
+
+			//Provirka na pravelnist vvedenih koordinat
+			/*if (test_input(therownum, thecolnum) == false) {
+				cout << "\n*Уважно прочитайте iнформацiю*\n\n";
+				goto PORT;
+			} */
+
+
+
+
+
+
+			//Provirka susidnih klitinok na pustotu
+			//yakscho = 0 - vidrivaem puste pole
 		if (minearr[therownum][thecolnum] == 0)
 			openingemptybox(therownum, thecolnum);
-		else 
+		else
 			manage_mine[therownum][thecolnum] = true;
 		cout << "\n" << endl;
 	}
-	
+
 
 	if (minearr[therownum][thecolnum] == -1)
 	{
-		
+
 	}
 
 	int time = (clock() - t) / CLOCKS_PER_SEC; //zmina v yau zapusani ms yai perevedeni v secundi
@@ -297,8 +362,8 @@ void saper()
 
 	system("cls");
 	game_over();
-	
-		
+
+
 	for (int i = 0; i < 20; i++) {
 
 		system("cls");
@@ -311,46 +376,46 @@ void saper()
 		cout << "#     # #     # #     # #           #     #   # #   #       #    #\n";
 		cout << " #####  #     # #     # #######     #######    #    ####### #     #\n";
 		Sleep(100);
-		
+
 
 	}
-	
 
 
-	
+
+
 	if (time_min != 0)
-		cout << endl << "Р§Р°СЃ РіСЂРё СЃС‚Р°РЅРѕРІРёРІ: " << time_min << "С…РІРёР»РёРЅ " << time_sec << "СЃРµРє " << endl; // vidodim secundi
+		cout << endl << "Час гри становив: " << time_min << "хвилин " << time_sec << "сек " << endl; // vidodim secundi
 	else
-		cout << endl << "Р§Р°СЃ РіСЂРё СЃС‚Р°РЅРѕРІРёРІ: " << time_sec << "СЃРµРє " << endl;
+		cout << endl << "Час гри становив: " << time_sec << "сек " << endl;
 
 
 
 	if (minearr[therownum][thecolnum] == -1)
-		cout << " Р’Рё РїРѕРїР°Р»Рё РЅР° Р±РѕРјР±Сѓ! " << endl;
+		cout << " Ви попали на бомбу! " << endl;
 	else
-		cout << "Р’iС‚Р°СЋ... \tР“СЂР° Р·Р°РІРµСЂС€РµРЅР°" << endl;
+		cout << "Вiтаю... \tГра завершена" << endl;
 
 
-
+	game_over();
+	system("color 07");
 	system("pause");
 }
 
 void menu() {
 	setlocale(LC_ALL, "rus");
 
-	
 
-	
+
 	int f = 1, k, code;
 	SetColor(0, 0);
 	GotoXY(27, 12);
 	SetColor(14, 0);
-	cout << "-->РќРѕРІР° РіСЂР°<--";
+	cout << "-->Нова гра<--";
 	GotoXY(30, 13);
 	SetColor(15, 0);
-	cout << "   Р’РёР№С‚Рё   ";
-	
-	
+	cout << "   Вийти   ";
+
+
 	do {
 		k = 0;
 		code = _getch();
@@ -360,20 +425,20 @@ void menu() {
 		if (code == 80) {
 			f = f * (-1);
 			if (f == 1) {
-				GotoXY(27, 12); 
-				SetColor(14, 0); 
-				cout <<"-->РќРѕРІР° РіСЂР°<--";
+				GotoXY(27, 12);
+				SetColor(14, 0);
+				cout << "-->Нова гра<--";
 				GotoXY(30, 13);
-				SetColor(15, 0); 
-				cout << "   Р’РёР№С‚Рё  ";
+				SetColor(15, 0);
+				cout << "   Вийти  ";
 			}
 			else {
 				GotoXY(27, 12);
 				SetColor(15, 0);
-				cout << "   РќРѕРІР° РіСЂР°   ";
-				GotoXY(30, 13); 
-				SetColor(14, 0); 
-				cout << "-->Р’РёР№С‚Рё<--";
+				cout << "   Нова гра   ";
+				GotoXY(30, 13);
+				SetColor(14, 0);
+				cout << "-->Вийти<--";
 			}
 		}
 		else if (code == 72) {
@@ -381,45 +446,36 @@ void menu() {
 			if (f == 1) {
 				GotoXY(27, 12);
 				SetColor(14, 0);
-				cout << "-->РќРѕРІР° РіСЂР°<--";
+				cout << "-->Нова гра<--";
 				GotoXY(30, 13);
 				SetColor(15, 0);
-				cout << "   Р’РёР№С‚Рё   ";
+				cout << "   Вийти   ";
 			}
 			else {
 				GotoXY(27, 12);
-				SetColor(15, 0); 
-				cout << "   РќРѕРІР° РіСЂР°   ";
-				GotoXY(30, 13); 
-				SetColor(14, 0); 
-				cout << "-->Р’РёР№С‚Рё<--";
+				SetColor(15, 0);
+				cout << "   Нова гра   ";
+				GotoXY(30, 13);
+				SetColor(14, 0);
+				cout << "-->Вийти<--";
 			}
 		}
 		else if (code == 13)
 			k = 1;
-		
+
 	} while (k == 0);
 	if (f != 1) exit(0);
-	
+
 	saper();
 	cin.get();
 }
 
 void main() {
 
-	//robimo comfortniy rozmir cmd
-	HWND hwnd;
-	char Title[1024];
-	GetConsoleTitle(Title, 1024); 
-	hwnd = FindWindow(NULL, Title); 
-	MoveWindow(hwnd, 26, 11, 700, 600, TRUE);
-	_getch();
 
-	
+
+
 
 	menu();
-	
+
 }
-
-
-
