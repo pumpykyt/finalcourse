@@ -97,7 +97,7 @@ void intro() {
 	} while (_getch());
 
 	cout << endl;
-	
+
 
 	cout << "\n\n";
 }
@@ -106,64 +106,48 @@ void intro() {
 
 void init_mine() {
 	int i, j;
-	for (i = 0; i < MAXROW; i++) {
-		for (j = 0; j < MAXCOL; j++) {
-			minearr[i][j] = 0;
-			manage_mine[i][j] = false;
+	for (i = 0; i < rowc; i++) {
+		for (j = 0; j < colc; j++) {
+			field[i][j] = 0;
+			admin_mine[i][j] = false;
 		}
 	}
-	for (i = 0; i < MAXROW; i++) minearr[i][0] = minearr[i][MAXCOL - 1] = -4;
-	for (i = 0; i < MAXCOL; i++) minearr[0][i] = minearr[MAXROW - 1][i] = -4;
+	for (i = 0; i < rowc; i++) field[i][0] = field[i][colc - 1] = -4;
+	for (i = 0; i < colc; i++) field[0][i] = field[rowc - 1][i] = -4;
 }
 
 void prep_mine(int tmpr, int tmpc) {
 	int i, j;
 	for (i = tmpr - 1; i <= tmpr + 1; i++) {
 		for (j = tmpc - 1; j <= tmpc + 1; j++) {
-			if (minearr[i][j] >= 0) minearr[i][j]++;
+			if (field[i][j] >= 0) field[i][j]++;
 		}
 	}
 }
 
-void  openingemptybox(int rownum, int colnum) {
+void  recursive_open_field(int rownum, int colnum) {
 	int i, j;
 	for (i = rownum - 1; i <= rownum + 1; i++) {
 		for (j = colnum - 1; j <= colnum + 1; j++) {
-			if (manage_mine[i][j] == false) {
-				manage_mine[i][j] = true;
-				if (minearr[i][j] == 0)
-					openingemptybox(i, j);
+			if (admin_mine[i][j] == false) {
+				admin_mine[i][j] = true;
+				if (field[i][j] == 0)
+					recursive_open_field(i, j);
 			}
 		}
 	}
 }
 
-int openedboxnum() {
+int opened_field_num() {
 	int i, j, sum = 0;
-	for (i = 1; i < MAXROW - 1; i++) {
-		for (j = 1; j < MAXCOL - 1; j++) {
-			if (manage_mine[i][j] == true)
+	for (i = 1; i < rowc - 1; i++) {
+		for (j = 1; j < colc - 1; j++) {
+			if (admin_mine[i][j] == true)
 				sum++;
 		}
 	}
 	return sum;
 }
-
-bool test_input(int rowno, int colno) {
-	int i, flag1 = 0, flag2 = 0;
-	for (i = 1; i < MAXROW - 1; i++) {
-		if (rowno == i)
-			flag1++;
-	}
-	for (i = 1; i < MAXCOL - 1; i++) {
-		if (colno == i)
-			flag2++;
-	}
-	if (flag1 == 0 || flag2 == 0)
-		return false;
-	return true;
-}
-
 
 void show_mine() {
 
@@ -172,30 +156,30 @@ void show_mine() {
 	int i, j;
 
 	//cout << " ";
-	//for (int x = 1; x < MAXCOL-1; x++)
+	//for (int x = 1; x < colc-1; x++)
 	//	cout << " " << x;
 	//cout << endl;
 
-	for (i = 1; i < MAXROW - 1; i++) {
+	for (i = 1; i < rowc - 1; i++) {
 		//cout << i; 
 
 
-		for (j = 1; j < MAXCOL - 1; j++) {
+		for (j = 1; j < colc - 1; j++) {
 
 
-			switch (manage_mine[i][j]) {
+			switch (admin_mine[i][j]) {
 			case true:
-				switch (minearr[i][j]) {
-				case 0: cout << "-";
+				switch (field[i][j]) {
+				case 0: cout << "-   ";
 					break;
 				default:
-					cout << minearr[i][j];
+					cout << field[i][j] << "   ";
 				}
 				break;
 
 			default:
 
-				cout << "#";
+				cout << "#   ";
 			}
 		}
 		cout << endl;
@@ -204,16 +188,16 @@ void show_mine() {
 
 void game_over() {
 	int i, j;
-	for (i = 1; i < MAXROW - 1; i++) {
+	for (i = 1; i < rowc - 1; i++) {
 		Sleep(150);
-		for (j = 1; j < MAXCOL - 1; j++) {
+		for (j = 1; j < colc - 1; j++) {
 			SetColor(rand() % 14 + 1, 15);
 			Sleep(15);
 			SetColor(rand() % 14 + 1, 15);
-			switch (minearr[i][j]) {
+			switch (field[i][j]) {
 			case 0: cout << "  -  "; break;
 			case -1: cout << " (b) "; break;
-			default: cout << "  " << minearr[i][j] << "  ";
+			default: cout << "  " << field[i][j] << "  ";
 			}
 		}
 		cout << "\n" << endl;
@@ -239,16 +223,16 @@ void saper()
 
 
 	intro();
-	closednum = (MAXROW - 2)*(MAXCOL - 2) - numofbombs;
+	closednum = (rowc - 2)*(colc - 2) - numofbombs;
 	init_mine();
 
 	// dodaem minu
 	srand(time(NULL));
 	while (i < numofbombs) {
-		tempr = rand() % (MAXROW - 2) + 1;
-		tempc = rand() % (MAXCOL - 2) + 1;
-		if (minearr[tempr][tempc] != -1) {
-			minearr[tempr][tempc] = -1;
+		tempr = rand() % (rowc - 2) + 1;
+		tempc = rand() % (colc - 2) + 1;
+		if (field[tempr][tempc] != -1) {
+			field[tempr][tempc] = -1;
 			prep_mine(tempr, tempc);
 			i++;
 		}
@@ -257,32 +241,32 @@ void saper()
 	//proces sapera
 
 	clock_t t = clock(); //stvoryv zminu dly taymera chasu sapera
-	while (openedboxnum() != closednum && minearr[therownum][thecolnum] != -1) {
+	while (opened_field_num() != closednum && field[therownum][thecolnum] != -1) {
 
 		system("cls");
 		show_mine();
 
 
 		char c;
+		
 		int x = 0;
 		int y = 0;
-
 		gotoxyGAME(0, 0);
 		do {
-
+		
 
 
 			c = _getch();
 			switch (c) {
 			case 75:
 
-				gotoxyGAME(x -= 1, y);
+				gotoxyGAME(x -= 4, y);
 
 
 				break;
 			case 77:
 
-				gotoxyGAME(x += 1, y);
+				gotoxyGAME(x += 4, y);
 
 				break;
 			case 72:
@@ -296,54 +280,29 @@ void saper()
 
 				break;
 			}
-
-		} while (c != 83);
-
-
-		thecolnum = x + 1;
+			
+		} while (c != 13);
+		thecolnum = (x / 4) + 1;
 		therownum = y + 1;
 
-
-
-
-		/*PORT:
-			//Vvodimo koordinaty booma
-			cout << "Рядок: ";
-			cin >> therownum;
-			cout << "Колонка: ";
-			cin >> thecolnum; */
-
-
-
-
-
-
-
-			//Provirka na pravelnist vvedenih koordinat
-			/*if (test_input(therownum, thecolnum) == false) {
-				cout << "\n*Уважно прочитайте iнформацiю*\n\n";
-				goto PORT;
-			} */
-
-
-
-
+		
 
 
 			//Provirka susidnih klitinok na pustotu
 			//yakscho = 0 - vidrivaem puste pole
-		if (minearr[therownum][thecolnum] == 0)
-			openingemptybox(therownum, thecolnum);
+		if (field[therownum][thecolnum] == 0)
+			recursive_open_field(therownum, thecolnum);
 		else
-			manage_mine[therownum][thecolnum] = true;
+			admin_mine[therownum][thecolnum] = true;
 		cout << "\n" << endl;
 	}
 
 
-	if (minearr[therownum][thecolnum] == -1)
+	if (field[therownum][thecolnum] == -1)
 	{
 
 	}
+
 
 	int time = (clock() - t) / CLOCKS_PER_SEC; //zmina v yau zapusani ms yai perevedeni v secundi
 	int time_min = 0;
@@ -357,7 +316,6 @@ void saper()
 	}
 	else
 		time_sec = time;
-
 
 
 	system("cls");
@@ -390,7 +348,7 @@ void saper()
 
 
 
-	if (minearr[therownum][thecolnum] == -1)
+	if (field[therownum][thecolnum] == -1)
 		cout << " Ви попали на бомбу! " << endl;
 	else
 		cout << "Вiтаю... \tГра завершена" << endl;
